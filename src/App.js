@@ -1,24 +1,32 @@
-import logo from './logo.svg';
 import './App.css';
+import Navigation from './Navigation';
+import Product from './Product';
+import Cart from './Cart';
+import {Routes, Route} from 'react-router-dom';
+import {useDispatch} from 'react-redux';
+import {useEffect} from 'react';
+import {save} from './cartSlice';
 
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    fetch('https://dummyjson.com/products')
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        console.log('rec data', data);
+        dispatch(save(data));
+      });
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navigation />
+      <Routes>
+        <Route path="/" element={<Product />}></Route>
+        <Route path="cart" element={<Cart />}></Route>
+      </Routes>
+    </>
   );
 }
 
